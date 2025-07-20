@@ -1,0 +1,4 @@
+insert into student_details(id, first_name, last_name, roll_number, date_of_birth, grade) values(101, 'test1 first name', 'test1 last name', 'A1', '2015-01-01', 'Five')
+insert into student_details(id, first_name, last_name, roll_number, date_of_birth, grade) values(102, 'test2 first name', 'test2 last name', 'B1', '2015-02-02', 'Five')
+insert into student_details(id, first_name, last_name, roll_number, date_of_birth, grade) values(103, 'test3 first name', 'test3 last name', 'A1', '2014-03-03', 'Six')
+insert into student_details(id, first_name, last_name, roll_number, date_of_birth, grade) values(104, 'test4 first name', 'test4 last name', 'B1', '2014-04-04', 'Six')

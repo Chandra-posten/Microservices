@@ -1,0 +1,57 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: studentms
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+    url: jdbc:h2:mem:studentdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    io.github.resilience4j: debug
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 8
+        permittedNumberOfCallsInHalfOpenState: 2
+        slidingWindowType: COUNT_BASED
+        waitDurationInOpenState: 30
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 4
+    instances:
+      studentmsclient:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        waitDurationInOpenState: 20s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
