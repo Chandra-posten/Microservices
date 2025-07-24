@@ -39,6 +39,17 @@ public class FeeService {
         return ResponseEntity.notFound().build();
     }
 
+    public ResponseEntity<FeeDetailsEntity> payFeeByStudentId(Integer student_id) {
+        Optional<FeeDetailsEntity> feeDetails = this.feeRepo.findByStudentId(student_id);
+        if (feeDetails.isPresent()) {
+            FeeDetailsEntity studentFeeDetails = feeDetails.get();
+            studentFeeDetails.setStatus("Paid");
+            FeeDetailsEntity updatedFee = this.feeRepo.save(studentFeeDetails);
+            return ResponseEntity.ok(updatedFee);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     /*public ResponseEntity<FeeDetailsEntity> getFeeDetailsByStudentRollNumber(String rollNumber) {
         Optional<FeeDetailsEntity> feeDetails = this.feeRepo.findByStudentRollNumber(rollNumber);
         if (feeDetails.isPresent()) {

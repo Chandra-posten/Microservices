@@ -43,7 +43,14 @@ public class StudentService {
         Integer id = student.getId();
         Optional<Student> studentToBeUpdated = this.studentRepo.findById(id);
         if (studentToBeUpdated.isPresent()) {
-            return ResponseEntity.ok(this.studentRepo.save(student));
+            Student existingStudent = studentToBeUpdated.get();
+            if (student.getFirstName() != null) existingStudent.setFirstName(student.getFirstName());
+            if (student.getLastName() != null) existingStudent.setLastName(student.getLastName());
+            if (student.getRoll_number() != null) existingStudent.setRoll_number(student.getRoll_number());
+            if (student.getDate_of_birth() != null) existingStudent.setDate_of_birth(student.getDate_of_birth());
+            if (student.getGrade() != null) existingStudent.setGrade(student.getGrade());
+            Student updatedStudent = this.studentRepo.save(existingStudent);
+            return ResponseEntity.ok(updatedStudent);
         }
         return ResponseEntity.notFound().build();
     }

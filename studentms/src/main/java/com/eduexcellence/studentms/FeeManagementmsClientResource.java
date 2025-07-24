@@ -3,11 +3,22 @@ package com.eduexcellence.studentms;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+class StudentIdRequest {
+    private Integer studentId;
+
+    public Integer getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Integer studentId) {
+        this.studentId = studentId;
+    }
+}
 
 @RestController
 public class FeeManagementmsClientResource {
@@ -21,10 +32,17 @@ public class FeeManagementmsClientResource {
         return webClient.get().uri("/api/v1/fee-management").retrieve().bodyToMono(Object.class);
     }
 
-    @GetMapping("/fee-details/{id}")
+    @PostMapping(value="/pay-fee/student", consumes = MediaType.APPLICATION_JSON_VALUE)
     @CircuitBreaker(name = "studentmsclient", fallbackMethod = "feeManagementFallback")
-    public Mono getStudentById(@PathVariable Integer id) {
-        return webClient.get().uri("/api/v1/fee-management/{id}", id).retrieve().bodyToMono(Object.class);
+    public Mono getStudentById(@RequestBody StudentIdRequest StudentRequest) {
+        Integer studentId = StudentRequest.getStudentId();
+        return webClient.post().uri("/api/v1/fee-management/pay-fee/student").contentType(MediaType.APPLICATION_JSON).bodyValue(studentId).retrieve().bodyToMono(Object.class);
+    }
+
+    @GetMapping("/fee-details-by-student-id/{id}")
+    @CircuitBreaker(name = "studentmsclient", fallbackMethod = "feeManagementFallback")
+    public Mono getFeeByStudentId(@PathVariable Integer id) {
+        return webClient.get().uri("/api/v1/fee-management/student/{id}", id).retrieve().bodyToMono(Object.class);
     }
 
     private Mono feeManagementFallback(CallNotPermittedException ce) {
