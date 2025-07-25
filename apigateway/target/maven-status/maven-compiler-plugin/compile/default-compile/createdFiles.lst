@@ -1,0 +1,3 @@
+com\eduexcellence\apigateway\ApiGatewayApplication.class
+com\eduexcellence\apigateway\config\GatewayConfig.class
+com\eduexcellence\apigateway\filter\LoggingGlobalPreFilter.class
