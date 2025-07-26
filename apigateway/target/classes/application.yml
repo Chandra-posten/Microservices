@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: api-gateway
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9999/oauth/token_key
   cloud:
     gateway:
       discovery:
@@ -11,6 +16,16 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
+        - id: oauth2-server
+          uri: http://localhost:9999
+          predicates:
+            - Path=/oauth/**
+        - id: auth-service
+          uri: http://localhost:9999
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - StripPrefix=2
         - id: student-service
           uri: lb://studentms
           predicates:
@@ -34,6 +49,9 @@ spring:
           predicates:
             - Path=/eureka/**
 
+jwt:
+  secret: eduexcellence-jwt-secret-key
+
 eureka:
   client:
     register-with-eureka: true
@@ -55,4 +73,5 @@ management:
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
-    org.springframework.cloud.loadbalancer: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
